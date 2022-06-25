@@ -3,6 +3,15 @@ from catalog import SupermarketCatalog
 from model_objects import Discount, Offer, Product, SpecialOfferType
 
 
+def _verify_optional_argument(
+    optional_argument: Optional[float], offer_type: SpecialOfferType
+) -> None:
+    if optional_argument is None:
+        raise ValueError(
+            f"optional_argument can not be None for Offer of type {offer_type}!"
+        )
+
+
 def _create_percentage_discount(
     product: Product, quantity: float, unit_price: float, percentage: float
 ) -> Discount:
@@ -66,27 +75,39 @@ def _create_discount(
             y=2,
         )
     elif offer.offer_type == SpecialOfferType.TEN_PERCENT_DISCOUNT:
+        _verify_optional_argument(
+            optional_argument=offer.optional_argument,
+            offer_type=SpecialOfferType.TEN_PERCENT_DISCOUNT,
+        )
         return _create_percentage_discount(
             product=product,
             quantity=quantity,
             unit_price=unit_price,
-            percentage=offer.argument,
+            percentage=offer.optional_argument,
         )
     elif offer.offer_type == SpecialOfferType.TWO_FOR_AMOUNT:
+        _verify_optional_argument(
+            optional_argument=offer.optional_argument,
+            offer_type=SpecialOfferType.TWO_FOR_AMOUNT,
+        )
         return _create_x_for_amount_discount(
             product=product,
             quantity=quantity,
             unit_price=unit_price,
             x=2,
-            paid_amount_per_x=offer.argument,
+            paid_amount_per_x=offer.optional_argument,
         )
     elif offer.offer_type == SpecialOfferType.FIVE_FOR_AMOUNT:
+        _verify_optional_argument(
+            optional_argument=offer.optional_argument,
+            offer_type=SpecialOfferType.FIVE_FOR_AMOUNT,
+        )
         return _create_x_for_amount_discount(
             product=product,
             quantity=quantity,
             unit_price=unit_price,
             x=5,
-            paid_amount_per_x=offer.argument,
+            paid_amount_per_x=offer.optional_argument,
         )
     else:
         raise ValueError(f"Unexpected value for offer.offer_type: {offer.offer_type}")

@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 
 
 class ProductUnit(Enum):
@@ -20,10 +21,15 @@ class SpecialOfferType(Enum):
 
 
 class Offer:
-    def __init__(self, offer_type: SpecialOfferType, product: Product, argument: float):
+    def __init__(
+        self,
+        offer_type: SpecialOfferType,
+        product: Product,
+        optional_argument: Optional[float],
+    ):
         self.offer_type = offer_type
         self.product = product
-        self.argument = argument
+        self.optional_argument = optional_argument
 
 
 class Discount:

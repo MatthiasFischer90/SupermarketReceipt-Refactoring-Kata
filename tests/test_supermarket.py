@@ -15,10 +15,10 @@ def test_three_for_two_offer():
     catalog.add_product(product=apples, price=2)
 
     teller = Teller(catalog=catalog)
-    # the passed "argument" in add_special_offer is not used anywhere, so value doesn't matter
-    # TODO: Do something about comment above?
     offer = Offer(
-        offer_type=SpecialOfferType.THREE_FOR_TWO, product=toothbrush, argument=1.0
+        offer_type=SpecialOfferType.THREE_FOR_TWO,
+        product=toothbrush,
+        optional_argument=None,
     )
     teller.add_offer(offer=offer)
 
@@ -65,7 +65,7 @@ def test_ten_percent_discount():
     offer = Offer(
         offer_type=SpecialOfferType.TEN_PERCENT_DISCOUNT,
         product=toothbrush,
-        argument=10.0,
+        optional_argument=10.0,
     )
     teller.add_offer(offer=offer)
 
@@ -103,7 +103,9 @@ def test_two_for_amount_offer():
 
     teller = Teller(catalog=catalog)
     offer = Offer(
-        offer_type=SpecialOfferType.TWO_FOR_AMOUNT, product=toothbrush, argument=1.8
+        offer_type=SpecialOfferType.TWO_FOR_AMOUNT,
+        product=toothbrush,
+        optional_argument=1.8,
     )
     teller.add_offer(offer=offer)
 
@@ -148,7 +150,9 @@ def test_five_for_amount_offer():
 
     teller = Teller(catalog=catalog)
     offer = Offer(
-        offer_type=SpecialOfferType.FIVE_FOR_AMOUNT, product=toothbrush, argument=4.5
+        offer_type=SpecialOfferType.FIVE_FOR_AMOUNT,
+        product=toothbrush,
+        optional_argument=4.5,
     )
     teller.add_offer(offer=offer)
 
@@ -191,8 +195,9 @@ def test_fail_unexpected_special_offer_type():
     unexpected_offer_type = -500
 
     teller = Teller(catalog=catalog)
-    # argument does not matter here
-    offer = Offer(offer_type=unexpected_offer_type, product=toothbrush, argument=3)
+    offer = Offer(
+        offer_type=unexpected_offer_type, product=toothbrush, optional_argument=None
+    )
     teller.add_offer(offer=offer)
 
     cart = ShoppingCart()
