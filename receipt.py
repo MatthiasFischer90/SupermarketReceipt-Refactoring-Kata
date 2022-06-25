@@ -29,8 +29,8 @@ class Receipt:
     ) -> None:
         self._items.append(ReceiptItem(product, quantity, price, total_price))
 
-    def add_discount(self, discount: Discount) -> None:
-        self._discounts.append(discount)
+    def add_discounts(self, discounts: list[Discount]) -> None:
+        self._discounts += discounts
 
     @property
     def items(self):

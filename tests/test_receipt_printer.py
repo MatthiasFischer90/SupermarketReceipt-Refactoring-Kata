@@ -38,7 +38,7 @@ def test_total():
 def test_discounts():
     receipt = Receipt()
     apples = Product("apples", ProductUnit.KILO)
-    receipt.add_discount(Discount(apples, "3 for 2", -0.99))
+    receipt.add_discounts([Discount(apples, "3 for 2", -0.99)])
     verify(ReceiptPrinter().print_receipt(receipt))
 
 
@@ -49,5 +49,5 @@ def test_whole_receipt():
     receipt.add_product(toothbrush, 1, 0.99, 0.99)
     receipt.add_product(toothbrush, 2, 0.99, 0.99 * 2)
     receipt.add_product(apples, 0.75, 1.99, 1.99 * 0.75)
-    receipt.add_discount(Discount(apples, "3 for 2", -0.99))
+    receipt.add_discounts([Discount(apples, "3 for 2", -0.99)])
     verify(ReceiptPrinter().print_receipt(receipt))

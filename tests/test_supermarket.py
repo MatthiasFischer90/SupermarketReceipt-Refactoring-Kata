@@ -20,7 +20,7 @@ def test_three_for_two_offer():
     offer = Offer(SpecialOfferType.THREE_FOR_TWO, toothbrush, 1.0)
     teller.add_offer(offer=offer)
 
-    # test with only two toothbrush
+    # test with only two toothbrushes
     cart_two_toothbrushes = ShoppingCart()
     cart_two_toothbrushes.add_item_quantity(apples, 3)
     cart_two_toothbrushes.add_item_quantity(toothbrush, 2)
@@ -167,3 +167,20 @@ def test_five_for_amount_offer():
     )
     assert 19 == receipt_fourteen_toothbrushes.total_price()
     assert 1 == len(receipt_fourteen_toothbrushes.discounts)
+
+
+def test_fail_unexpected_special_offer_type():
+    catalog = FakeCatalog()
+    toothbrush = Product("toothbrush", ProductUnit.EACH)
+    catalog.add_product(toothbrush, 1)
+
+    unexpected_special_offer_type = -500
+
+    teller = Teller(catalog=catalog)
+    offer = Offer(unexpected_special_offer_type, toothbrush, 3)
+    teller.add_offer(offer=offer)
+
+    cart = ShoppingCart()
+    cart.add_item_quantity(toothbrush, 3)
+    with pytest.raises(ValueError):
+        teller.check_out_articles_from_cart(cart)

@@ -1,5 +1,6 @@
 from model_objects import Offer, Product, SpecialOfferType
 from receipt import Receipt
+from discount_creation import create_discounts
 
 from shopping_cart import ShoppingCart
 from catalog import SupermarketCatalog
@@ -29,6 +30,11 @@ class Teller:
         self._add_products_to_receipt(
             receipt=receipt, product_quantities=cart.product_quantities
         )
-        cart.handle_offers(receipt, self.product_offers_map, self.catalog)
+        discounts = create_discounts(
+            product_quantities_map=cart.product_quantities,
+            product_offers_map=self.product_offers_map,
+            catalog=self.catalog,
+        )
+        receipt.add_discounts(discounts=discounts)
 
         return receipt
