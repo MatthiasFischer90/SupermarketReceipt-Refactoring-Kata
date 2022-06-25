@@ -85,3 +85,4 @@ target/
 venv
 
 .idea
+.vscode
