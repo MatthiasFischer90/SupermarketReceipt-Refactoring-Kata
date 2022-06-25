@@ -6,10 +6,11 @@ from model_objects import Discount, Offer, Product, SpecialOfferType
 def _create_percentage_discount(
     product: Product, quantity: float, unit_price: float, percentage: float
 ) -> Discount:
+    discount_amount = quantity * unit_price * percentage / 100.0
     return Discount(
-        product,
-        str(percentage) + "% off",
-        -quantity * unit_price * percentage / 100.0,
+        product=product,
+        description=str(percentage) + "% off",
+        discount_amount=-discount_amount,
     )
 
 
@@ -25,7 +26,11 @@ def _create_x_for_y_discount(
         discount_amount = quantity * unit_price - (
             ((quantity_as_int // x) * y * unit_price) + quantity_as_int % x * unit_price
         )
-        return Discount(product, f"{x} for {y}", -discount_amount)
+        return Discount(
+            product=product,
+            description=f"{x} for {y}",
+            discount_amount=-discount_amount,
+        )
 
 
 def _create_x_for_amount_discount(
@@ -41,8 +46,12 @@ def _create_x_for_amount_discount(
             paid_amount_per_x * (quantity_as_int // x)
             + quantity_as_int % x * unit_price
         )
-        discount_n = unit_price * quantity - total
-        return Discount(product, f"{x} for {str(paid_amount_per_x)}", -discount_n)
+        discount_amount = unit_price * quantity - total
+        return Discount(
+            product=product,
+            description=f"{x} for {str(paid_amount_per_x)}",
+            discount_amount=-discount_amount,
+        )
 
 
 def _create_discount(

@@ -10,31 +10,29 @@ class ReceiptPrinter:
     def print_receipt(self, receipt: Receipt) -> str:
         result = ""
         for item in receipt.items:
-            receipt_item = self._print_receipt_item(item)
+            receipt_item = self._print_receipt_item(item=item)
             result += receipt_item
 
         for discount in receipt.discounts:
-            discount_presentation = self._print_discount(discount)
+            discount_presentation = self._print_discount(discount=discount)
             result += discount_presentation
 
         result += "\n"
-        result += self._present_total(receipt)
+        result += self._present_total(receipt=receipt)
         return str(result)
 
     def _print_receipt_item(self, item: ReceiptItem) -> str:
-        total_price_printed = self._print_price(item.total_price)
+        total_price_printed = self._print_price(price=item.total_price)
         name = item.product.name
-        line = self._format_line_with_whitespace(name, total_price_printed)
+        line = self._format_line_with_whitespace(name=name, value=total_price_printed)
         if item.quantity != 1:
-            line += (
-                f"  {self._print_price(item.price)} * {self._print_quantity(item)}\n"
-            )
+            line += f"  {self._print_price(price=item.price)} * {self._print_quantity(item=item)}\n"
         return line
 
     def _format_line_with_whitespace(self, name: str, value: str) -> str:
         line = name
         whitespace_size = self.columns - len(name) - len(value)
-        for i in range(whitespace_size):
+        for _ in range(whitespace_size):
             line += " "
         line += value
         line += "\n"
@@ -51,10 +49,10 @@ class ReceiptPrinter:
 
     def _print_discount(self, discount: Discount) -> str:
         name = f"{discount.description} ({discount.product.name})"
-        value = self._print_price(discount.discount_amount)
-        return self._format_line_with_whitespace(name, value)
+        value = self._print_price(price=discount.discount_amount)
+        return self._format_line_with_whitespace(name=name, value=value)
 
     def _present_total(self, receipt: Receipt) -> str:
         name = "Total: "
-        value = self._print_price(receipt.total_price())
-        return self._format_line_with_whitespace(name, value)
+        value = self._print_price(price=receipt.total_price())
+        return self._format_line_with_whitespace(name=name, value=value)
