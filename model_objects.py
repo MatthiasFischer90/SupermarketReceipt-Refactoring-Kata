@@ -33,7 +33,7 @@ class Offer:
 
 
 class Discount:
-    def __init__(self, product: Product, description: str, discount_amount: float):
+    def __init__(self, product: Product, description: str, discount_amount_cents: int):
         self.product = product
         self.description = description
-        self.discount_amount = discount_amount
+        self.discount_amount_counts = discount_amount_cents

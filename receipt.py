@@ -3,12 +3,16 @@ from model_objects import Discount, Product
 
 class ReceiptItem:
     def __init__(
-        self, product: Product, quantity: float, price: float, total_price: float
+        self,
+        product: Product,
+        quantity: float,
+        price_cents: int,
+        total_price_cents: int,
     ):
         self.product = product
         self.quantity = quantity
-        self.price = price
-        self.total_price = total_price
+        self.price_cents = price_cents
+        self.total_price_cents = total_price_cents
 
 
 class Receipt:
@@ -16,20 +20,27 @@ class Receipt:
         self._items: list[ReceiptItem] = []
         self._discounts: list[Discount] = []
 
-    def total_price(self) -> float:
+    def total_price_cents(self) -> int:
         total = 0
         for item in self.items:
-            total += item.total_price
+            total += item.total_price_cents
         for discount in self.discounts:
-            total += discount.discount_amount
+            total += discount.discount_amount_counts
         return total
 
     def add_product(
-        self, product: Product, quantity: float, price: float, total_price: float
+        self,
+        product: Product,
+        quantity: float,
+        price_cents: int,
+        total_price_cents: int,
     ) -> None:
         self._items.append(
             ReceiptItem(
-                product=product, quantity=quantity, price=price, total_price=total_price
+                product=product,
+                quantity=quantity,
+                price_cents=price_cents,
+                total_price_cents=total_price_cents,
             )
         )
 

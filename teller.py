@@ -1,4 +1,4 @@
-from model_objects import Offer, Product, SpecialOfferType
+from model_objects import Offer, Product
 from receipt import Receipt
 from discount_creation import create_discounts
 
@@ -21,9 +21,14 @@ class Teller:
         self, receipt: Receipt, product_quantities: dict[Product, float]
     ) -> None:
         for product, quantity in product_quantities.items():
-            unit_price = self.catalog.unit_price(product)
-            price = quantity * unit_price
-            receipt.add_product(product, quantity, unit_price, price)
+            unit_price_cents = self.catalog.unit_price_cents(product)
+            total_price_cents = round(quantity * unit_price_cents)
+            receipt.add_product(
+                product=product,
+                quantity=quantity,
+                price_cents=unit_price_cents,
+                total_price_cents=total_price_cents,
+            )
 
     def check_out_articles_from_cart(self, cart: ShoppingCart) -> Receipt:
         receipt = Receipt()

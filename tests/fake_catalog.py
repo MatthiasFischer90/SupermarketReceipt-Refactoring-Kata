@@ -5,11 +5,11 @@ from model_objects import Product
 class FakeCatalog(SupermarketCatalog):
     def __init__(self):
         self.products: dict[str, Product] = {}
-        self.prices: dict[str, float] = {}
+        self.prices_cents: dict[str, int] = {}
 
-    def add_product(self, product: Product, price: float) -> None:
+    def add_product(self, product: Product, price_cents: int) -> None:
         self.products[product.name] = product
-        self.prices[product.name] = price
+        self.prices_cents[product.name] = price_cents
 
-    def unit_price(self, product: Product) -> float:
-        return self.prices[product.name]
+    def unit_price_cents(self, product: Product) -> int:
+        return self.prices_cents[product.name]

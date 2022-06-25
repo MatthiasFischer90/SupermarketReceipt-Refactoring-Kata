@@ -9,10 +9,10 @@ from tests.fake_catalog import FakeCatalog
 def test_three_for_two_offer():
     catalog = FakeCatalog()
     toothbrush = Product(name="toothbrush", unit=ProductUnit.EACH)
-    catalog.add_product(product=toothbrush, price=1)
+    catalog.add_product(product=toothbrush, price_cents=100)
 
     apples = Product(name="apples", unit=ProductUnit.KILO)
-    catalog.add_product(product=apples, price=2)
+    catalog.add_product(product=apples, price_cents=200)
 
     teller = Teller(catalog=catalog)
     offer = Offer(
@@ -29,7 +29,7 @@ def test_three_for_two_offer():
     receipt_two_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_two_toothbrushes
     )
-    assert 8 == receipt_two_toothbrushes.total_price()
+    assert 800 == receipt_two_toothbrushes.total_price_cents()
     assert 0 == len(receipt_two_toothbrushes.discounts)
 
     # test with exactly three toothbrushes
@@ -39,7 +39,7 @@ def test_three_for_two_offer():
     receipt_three_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_three_toothbrushes
     )
-    assert 8 == receipt_three_toothbrushes.total_price()
+    assert 800 == receipt_three_toothbrushes.total_price_cents()
     assert 1 == len(receipt_three_toothbrushes.discounts)
 
     # test with eight toothbrushes
@@ -49,17 +49,17 @@ def test_three_for_two_offer():
     receipt_eight_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_eight_toothbrushes
     )
-    assert 12 == receipt_eight_toothbrushes.total_price()
+    assert 1200 == receipt_eight_toothbrushes.total_price_cents()
     assert 1 == len(receipt_eight_toothbrushes.discounts)
 
 
 def test_ten_percent_discount():
     catalog = FakeCatalog()
     toothbrush = Product(name="toothbrush", unit=ProductUnit.EACH)
-    catalog.add_product(product=toothbrush, price=0.99)
+    catalog.add_product(product=toothbrush, price_cents=99)
 
     apples = Product(name="apples", unit=ProductUnit.KILO)
-    catalog.add_product(product=apples, price=1.99)
+    catalog.add_product(product=apples, price_cents=199)
 
     teller = Teller(catalog=catalog)
     offer = Offer(
@@ -75,37 +75,37 @@ def test_ten_percent_discount():
 
     receipt = teller.check_out_articles_from_cart(cart=cart)
 
-    assert 6.75 == pytest.approx(receipt.total_price(), 0.01)
+    assert 676 == receipt.total_price_cents()
     assert 2 == len(receipt.items)
 
     # check apples
     receipt_item_apples = receipt.items[0]
     assert apples == receipt_item_apples.product
-    assert 1.99 == receipt_item_apples.price
-    assert 2.5 * 1.99 == pytest.approx(receipt_item_apples.total_price, 0.01)
+    assert 199 == receipt_item_apples.price_cents
+    assert 498 == receipt_item_apples.total_price_cents
     assert 2.5 == receipt_item_apples.quantity
 
     # check toothbrushes
     receipt_item_toothbrush = receipt.items[1]
     assert toothbrush == receipt_item_toothbrush.product
-    assert 0.99 == receipt_item_toothbrush.price
-    assert 2 * 0.99 == pytest.approx(receipt_item_toothbrush.total_price, 0.01)
+    assert 99 == receipt_item_toothbrush.price_cents
+    assert 198 == receipt_item_toothbrush.total_price_cents
     assert 2 == receipt_item_toothbrush.quantity
 
 
 def test_two_for_amount_offer():
     catalog = FakeCatalog()
     toothbrush = Product(name="toothbrush", unit=ProductUnit.EACH)
-    catalog.add_product(product=toothbrush, price=1)
+    catalog.add_product(product=toothbrush, price_cents=100)
 
     apples = Product(name="apples", unit=ProductUnit.KILO)
-    catalog.add_product(product=apples, price=2)
+    catalog.add_product(product=apples, price_cents=200)
 
     teller = Teller(catalog=catalog)
     offer = Offer(
         offer_type=SpecialOfferType.TWO_FOR_AMOUNT,
         product=toothbrush,
-        optional_argument=1.8,
+        optional_argument=180,
     )
     teller.add_offer(offer=offer)
 
@@ -116,7 +116,7 @@ def test_two_for_amount_offer():
     receipt_one_toothbrush = teller.check_out_articles_from_cart(
         cart=cart_one_toothbrush
     )
-    assert 7 == receipt_one_toothbrush.total_price()
+    assert 700 == receipt_one_toothbrush.total_price_cents()
     assert 0 == len(receipt_one_toothbrush.discounts)
 
     # test with exactly two toothbrushes
@@ -126,7 +126,7 @@ def test_two_for_amount_offer():
     receipt_two_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_two_toothbrushes
     )
-    assert 7.8 == receipt_two_toothbrushes.total_price()
+    assert 780 == receipt_two_toothbrushes.total_price_cents()
     assert 1 == len(receipt_two_toothbrushes.discounts)
 
     # test with five toothbrushes
@@ -136,23 +136,23 @@ def test_two_for_amount_offer():
     receipt_five_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_five_toothbrushes
     )
-    assert 10.6 == receipt_five_toothbrushes.total_price()
+    assert 1060 == receipt_five_toothbrushes.total_price_cents()
     assert 1 == len(receipt_five_toothbrushes.discounts)
 
 
 def test_five_for_amount_offer():
     catalog = FakeCatalog()
     toothbrush = Product(name="toothbrush", unit=ProductUnit.EACH)
-    catalog.add_product(product=toothbrush, price=1)
+    catalog.add_product(product=toothbrush, price_cents=100)
 
     apples = Product(name="apples", unit=ProductUnit.KILO)
-    catalog.add_product(product=apples, price=2)
+    catalog.add_product(product=apples, price_cents=200)
 
     teller = Teller(catalog=catalog)
     offer = Offer(
         offer_type=SpecialOfferType.FIVE_FOR_AMOUNT,
         product=toothbrush,
-        optional_argument=4.5,
+        optional_argument=450,
     )
     teller.add_offer(offer=offer)
 
@@ -163,7 +163,7 @@ def test_five_for_amount_offer():
     receipt_one_toothbrush = teller.check_out_articles_from_cart(
         cart=cart_one_toothbrushes
     )
-    assert 7 == receipt_one_toothbrush.total_price()
+    assert 700 == receipt_one_toothbrush.total_price_cents()
     assert 0 == len(receipt_one_toothbrush.discounts)
 
     # test with exactly five toothbrushes
@@ -173,7 +173,7 @@ def test_five_for_amount_offer():
     receipt_five_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_five_toothbrushes
     )
-    assert 10.5 == receipt_five_toothbrushes.total_price()
+    assert 1050 == receipt_five_toothbrushes.total_price_cents()
     assert 1 == len(receipt_five_toothbrushes.discounts)
 
     # test with 14 toothbrushes
@@ -183,14 +183,14 @@ def test_five_for_amount_offer():
     receipt_fourteen_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_fourteen_toothbrushes
     )
-    assert 19 == receipt_fourteen_toothbrushes.total_price()
+    assert 1900 == receipt_fourteen_toothbrushes.total_price_cents()
     assert 1 == len(receipt_fourteen_toothbrushes.discounts)
 
 
 def test_fail_unexpected_special_offer_type():
     catalog = FakeCatalog()
     toothbrush = Product(name="toothbrush", unit=ProductUnit.EACH)
-    catalog.add_product(product=toothbrush, price=1)
+    catalog.add_product(product=toothbrush, price_cents=100)
 
     unexpected_offer_type = -500
 

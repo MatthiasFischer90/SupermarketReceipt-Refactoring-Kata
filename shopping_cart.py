@@ -1,8 +1,4 @@
-import math
-
-from catalog import SupermarketCatalog
-from model_objects import Offer, Product, SpecialOfferType, Discount
-from receipt import Receipt
+from model_objects import Product
 
 
 class ShoppingCart:
