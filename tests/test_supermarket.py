@@ -52,21 +52,33 @@ def test_three_for_two_offer():
     teller = Teller(catalog)
     teller.add_special_offer(SpecialOfferType.THREE_FOR_TWO, toothbrush, None)
 
+    # test with only two toothbrush
+    cart_two_toothbrushes = ShoppingCart()
+    cart_two_toothbrushes.add_item_quantity(apples, 3)
+    cart_two_toothbrushes.add_item_quantity(toothbrush, 2)
+    receipt_two_toothbrushes = teller.checks_out_articles_from(cart_two_toothbrushes)
+    assert 8 == receipt_two_toothbrushes.total_price()
+    assert 0 == len(receipt_two_toothbrushes.discounts)
+
     # test with exactly three toothbrushes
-    cart_one = ShoppingCart()
-    cart_one.add_item_quantity(apples, 3)
-    cart_one.add_item_quantity(toothbrush, 3)
-    receipt_one = teller.checks_out_articles_from(cart_one)
-    assert 8 == receipt_one.total_price()
-    assert 1 == len(receipt_one.discounts)
+    cart_three_toothbrushes = ShoppingCart()
+    cart_three_toothbrushes.add_item_quantity(apples, 3)
+    cart_three_toothbrushes.add_item_quantity(toothbrush, 3)
+    receipt_three_toothbrushes = teller.checks_out_articles_from(
+        cart_three_toothbrushes
+    )
+    assert 8 == receipt_three_toothbrushes.total_price()
+    assert 1 == len(receipt_three_toothbrushes.discounts)
 
     # test with eight toothbrushes
-    cart_two = ShoppingCart()
-    cart_two.add_item_quantity(apples, 3)
-    cart_two.add_item_quantity(toothbrush, 8)
-    receipt_two = teller.checks_out_articles_from(cart_two)
-    assert 12 == receipt_two.total_price()
-    assert 1 == len(receipt_two.discounts)
+    cart_eight_toothbrushes = ShoppingCart()
+    cart_eight_toothbrushes.add_item_quantity(apples, 3)
+    cart_eight_toothbrushes.add_item_quantity(toothbrush, 8)
+    receipt_eight_toothbrushes = teller.checks_out_articles_from(
+        cart_eight_toothbrushes
+    )
+    assert 12 == receipt_eight_toothbrushes.total_price()
+    assert 1 == len(receipt_eight_toothbrushes.discounts)
 
 
 def test_two_for_amount_offer():
@@ -80,21 +92,29 @@ def test_two_for_amount_offer():
     teller = Teller(catalog)
     teller.add_special_offer(SpecialOfferType.TWO_FOR_AMOUNT, toothbrush, 1.8)
 
+    # test with only one toothbrush
+    cart_one_toothbrush = ShoppingCart()
+    cart_one_toothbrush.add_item_quantity(apples, 3)
+    cart_one_toothbrush.add_item_quantity(toothbrush, 1)
+    receipt_one_toothbrush = teller.checks_out_articles_from(cart_one_toothbrush)
+    assert 7 == receipt_one_toothbrush.total_price()
+    assert 0 == len(receipt_one_toothbrush.discounts)
+
     # test with exactly two toothbrushes
-    cart_one = ShoppingCart()
-    cart_one.add_item_quantity(apples, 3)
-    cart_one.add_item_quantity(toothbrush, 2)
-    receipt_one = teller.checks_out_articles_from(cart_one)
-    assert 7.8 == receipt_one.total_price()
-    assert 1 == len(receipt_one.discounts)
+    cart_two_toothbrushes = ShoppingCart()
+    cart_two_toothbrushes.add_item_quantity(apples, 3)
+    cart_two_toothbrushes.add_item_quantity(toothbrush, 2)
+    receipt_two_toothbrushes = teller.checks_out_articles_from(cart_two_toothbrushes)
+    assert 7.8 == receipt_two_toothbrushes.total_price()
+    assert 1 == len(receipt_two_toothbrushes.discounts)
 
     # test with five toothbrushes
-    cart_two = ShoppingCart()
-    cart_two.add_item_quantity(apples, 3)
-    cart_two.add_item_quantity(toothbrush, 5)
-    receipt_two = teller.checks_out_articles_from(cart_two)
-    assert 10.6 == receipt_two.total_price()
-    assert 1 == len(receipt_two.discounts)
+    cart_five_toothbrushes = ShoppingCart()
+    cart_five_toothbrushes.add_item_quantity(apples, 3)
+    cart_five_toothbrushes.add_item_quantity(toothbrush, 5)
+    receipt_five_toothbrushes = teller.checks_out_articles_from(cart_five_toothbrushes)
+    assert 10.6 == receipt_five_toothbrushes.total_price()
+    assert 1 == len(receipt_five_toothbrushes.discounts)
 
 
 def test_five_for_amount_offer():
@@ -108,18 +128,28 @@ def test_five_for_amount_offer():
     teller = Teller(catalog)
     teller.add_special_offer(SpecialOfferType.FIVE_FOR_AMOUNT, toothbrush, 4.5)
 
+    # test with only one toothbrush
+    cart_one_toothbrushes = ShoppingCart()
+    cart_one_toothbrushes.add_item_quantity(apples, 3)
+    cart_one_toothbrushes.add_item_quantity(toothbrush, 1)
+    receipt_one_toothbrush = teller.checks_out_articles_from(cart_one_toothbrushes)
+    assert 7 == receipt_one_toothbrush.total_price()
+    assert 0 == len(receipt_one_toothbrush.discounts)
+
     # test with exactly five toothbrushes
-    cart_one = ShoppingCart()
-    cart_one.add_item_quantity(apples, 3)
-    cart_one.add_item_quantity(toothbrush, 5)
-    receipt_one = teller.checks_out_articles_from(cart_one)
-    assert 10.5 == receipt_one.total_price()
-    assert 1 == len(receipt_one.discounts)
+    cart_five_toothbrushes = ShoppingCart()
+    cart_five_toothbrushes.add_item_quantity(apples, 3)
+    cart_five_toothbrushes.add_item_quantity(toothbrush, 5)
+    receipt_five_toothbrushes = teller.checks_out_articles_from(cart_five_toothbrushes)
+    assert 10.5 == receipt_five_toothbrushes.total_price()
+    assert 1 == len(receipt_five_toothbrushes.discounts)
 
     # test with 14 toothbrushes
-    cart_two = ShoppingCart()
-    cart_two.add_item_quantity(apples, 3)
-    cart_two.add_item_quantity(toothbrush, 14)
-    receipt_two = teller.checks_out_articles_from(cart_two)
-    assert 19 == receipt_two.total_price()
-    assert 1 == len(receipt_two.discounts)
+    cart_fourteen_toothbrushes = ShoppingCart()
+    cart_fourteen_toothbrushes.add_item_quantity(apples, 3)
+    cart_fourteen_toothbrushes.add_item_quantity(toothbrush, 14)
+    receipt_fourteen_toothbrushes = teller.checks_out_articles_from(
+        cart_fourteen_toothbrushes
+    )
+    assert 19 == receipt_fourteen_toothbrushes.total_price()
+    assert 1 == len(receipt_fourteen_toothbrushes.discounts)
