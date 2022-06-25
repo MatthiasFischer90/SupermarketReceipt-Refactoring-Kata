@@ -21,7 +21,7 @@ class Teller:
         self, receipt: Receipt, product_quantities: dict[Product, float]
     ) -> None:
         for product, quantity in product_quantities.items():
-            unit_price_cents = self.catalog.unit_price_cents(product)
+            unit_price_cents = self.catalog.get_unit_price_cents(product)
             total_price_cents = round(quantity * unit_price_cents)
             receipt.add_product(
                 product=product,

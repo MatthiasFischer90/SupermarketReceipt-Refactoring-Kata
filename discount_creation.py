@@ -124,7 +124,7 @@ def create_discounts(
     for product, quantity in product_quantities_map.items():
         if product in product_offers_map.keys():
             offer = product_offers_map[product]
-            unit_price_cents = catalog.unit_price_cents(product)
+            unit_price_cents = catalog.get_unit_price_cents(product)
             discount = _create_discount(
                 product=product,
                 quantity=quantity,

@@ -29,7 +29,7 @@ def test_three_for_two_offer():
     receipt_two_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_two_toothbrushes
     )
-    assert 800 == receipt_two_toothbrushes.total_price_cents()
+    assert 800 == receipt_two_toothbrushes.get_total_price_cents()
     assert 0 == len(receipt_two_toothbrushes.discounts)
 
     # test with exactly three toothbrushes
@@ -39,7 +39,7 @@ def test_three_for_two_offer():
     receipt_three_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_three_toothbrushes
     )
-    assert 800 == receipt_three_toothbrushes.total_price_cents()
+    assert 800 == receipt_three_toothbrushes.get_total_price_cents()
     assert 1 == len(receipt_three_toothbrushes.discounts)
 
     # test with eight toothbrushes
@@ -49,7 +49,7 @@ def test_three_for_two_offer():
     receipt_eight_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_eight_toothbrushes
     )
-    assert 1200 == receipt_eight_toothbrushes.total_price_cents()
+    assert 1200 == receipt_eight_toothbrushes.get_total_price_cents()
     assert 1 == len(receipt_eight_toothbrushes.discounts)
 
 
@@ -75,7 +75,7 @@ def test_ten_percent_discount():
 
     receipt = teller.check_out_articles_from_cart(cart=cart)
 
-    assert 676 == receipt.total_price_cents()
+    assert 676 == receipt.get_total_price_cents()
     assert 2 == len(receipt.items)
 
     # check apples
@@ -116,7 +116,7 @@ def test_two_for_amount_offer():
     receipt_one_toothbrush = teller.check_out_articles_from_cart(
         cart=cart_one_toothbrush
     )
-    assert 700 == receipt_one_toothbrush.total_price_cents()
+    assert 700 == receipt_one_toothbrush.get_total_price_cents()
     assert 0 == len(receipt_one_toothbrush.discounts)
 
     # test with exactly two toothbrushes
@@ -126,7 +126,7 @@ def test_two_for_amount_offer():
     receipt_two_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_two_toothbrushes
     )
-    assert 780 == receipt_two_toothbrushes.total_price_cents()
+    assert 780 == receipt_two_toothbrushes.get_total_price_cents()
     assert 1 == len(receipt_two_toothbrushes.discounts)
 
     # test with five toothbrushes
@@ -136,7 +136,7 @@ def test_two_for_amount_offer():
     receipt_five_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_five_toothbrushes
     )
-    assert 1060 == receipt_five_toothbrushes.total_price_cents()
+    assert 1060 == receipt_five_toothbrushes.get_total_price_cents()
     assert 1 == len(receipt_five_toothbrushes.discounts)
 
 
@@ -163,7 +163,7 @@ def test_five_for_amount_offer():
     receipt_one_toothbrush = teller.check_out_articles_from_cart(
         cart=cart_one_toothbrushes
     )
-    assert 700 == receipt_one_toothbrush.total_price_cents()
+    assert 700 == receipt_one_toothbrush.get_total_price_cents()
     assert 0 == len(receipt_one_toothbrush.discounts)
 
     # test with exactly five toothbrushes
@@ -173,7 +173,7 @@ def test_five_for_amount_offer():
     receipt_five_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_five_toothbrushes
     )
-    assert 1050 == receipt_five_toothbrushes.total_price_cents()
+    assert 1050 == receipt_five_toothbrushes.get_total_price_cents()
     assert 1 == len(receipt_five_toothbrushes.discounts)
 
     # test with 14 toothbrushes
@@ -183,7 +183,7 @@ def test_five_for_amount_offer():
     receipt_fourteen_toothbrushes = teller.check_out_articles_from_cart(
         cart=cart_fourteen_toothbrushes
     )
-    assert 1900 == receipt_fourteen_toothbrushes.total_price_cents()
+    assert 1900 == receipt_fourteen_toothbrushes.get_total_price_cents()
     assert 1 == len(receipt_fourteen_toothbrushes.discounts)
 
 

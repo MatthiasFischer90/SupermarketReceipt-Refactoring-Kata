@@ -20,7 +20,7 @@ class Receipt:
         self._items: list[ReceiptItem] = []
         self._discounts: list[Discount] = []
 
-    def total_price_cents(self) -> int:
+    def get_total_price_cents(self) -> int:
         total = 0
         for item in self.items:
             total += item.total_price_cents

@@ -54,5 +54,5 @@ class ReceiptPrinter:
 
     def _present_total(self, receipt: Receipt) -> str:
         name = "Total: "
-        value = self._print_price(price_cents=receipt.total_price_cents())
+        value = self._print_price(price_cents=receipt.get_total_price_cents())
         return self._format_line_with_whitespace(name=name, value=value)

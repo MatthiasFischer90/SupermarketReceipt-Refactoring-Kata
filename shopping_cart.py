@@ -5,9 +5,6 @@ class ShoppingCart:
     def __init__(self):
         self._product_quantities: dict[Product, float] = {}
 
-    def add_item(self, product: Product) -> None:
-        self.add_item_quantity(product=product, quantity=1.0)
-
     @property
     def product_quantities(self):
         return self._product_quantities
