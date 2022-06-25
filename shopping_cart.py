@@ -1,18 +1,13 @@
 import math
 
 from catalog import SupermarketCatalog
-from model_objects import Offer, Product, ProductQuantity, SpecialOfferType, Discount
+from model_objects import Offer, Product, SpecialOfferType, Discount
 from receipt import Receipt
 
 
 class ShoppingCart:
     def __init__(self):
-        self._items: list[ProductQuantity] = []
         self._product_quantities: dict[Product, float] = {}
-
-    @property
-    def items(self):
-        return self._items
 
     def add_item(self, product: Product) -> None:
         self.add_item_quantity(product, 1.0)
@@ -22,7 +17,6 @@ class ShoppingCart:
         return self._product_quantities
 
     def add_item_quantity(self, product: Product, quantity: float) -> None:
-        self._items.append(ProductQuantity(product, quantity))
         if product in self._product_quantities.keys():
             self._product_quantities[product] = (
                 self._product_quantities[product] + quantity

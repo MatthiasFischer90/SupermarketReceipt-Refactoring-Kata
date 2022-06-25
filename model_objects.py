@@ -12,12 +12,6 @@ class Product:
         self.unit = unit
 
 
-class ProductQuantity:
-    def __init__(self, product: Product, quantity: float):
-        self.product = product
-        self.quantity = quantity
-
-
 class SpecialOfferType(Enum):
     THREE_FOR_TWO = 1
     TEN_PERCENT_DISCOUNT = 2

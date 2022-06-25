@@ -8,23 +8,27 @@ from catalog import SupermarketCatalog
 class Teller:
     def __init__(self, catalog: SupermarketCatalog):
         self.catalog = catalog
-        self.offers: dict[Product, Offer] = {}
+        self.product_offers_map: dict[Product, Offer] = {}
 
-    def add_special_offer(
-        self, offer_type: SpecialOfferType, product: Product, argument: float
+    def add_offer(
+        self,
+        offer: Offer,
     ) -> None:
-        self.offers[product] = Offer(offer_type, product, argument)
+        self.product_offers_map[offer.product] = offer
 
-    def checks_out_articles_from(self, the_cart: ShoppingCart) -> Receipt:
-        receipt = Receipt()
-        product_quantities = the_cart.items
-        for pq in product_quantities:
-            p = pq.product
-            quantity = pq.quantity
-            unit_price = self.catalog.unit_price(p)
+    def _add_products_to_receipt(
+        self, receipt: Receipt, product_quantities: dict[Product, float]
+    ) -> None:
+        for product, quantity in product_quantities.items():
+            unit_price = self.catalog.unit_price(product)
             price = quantity * unit_price
-            receipt.add_product(p, quantity, unit_price, price)
+            receipt.add_product(product, quantity, unit_price, price)
 
-        the_cart.handle_offers(receipt, self.offers, self.catalog)
+    def check_out_articles_from_cart(self, cart: ShoppingCart) -> Receipt:
+        receipt = Receipt()
+        self._add_products_to_receipt(
+            receipt=receipt, product_quantities=cart.product_quantities
+        )
+        cart.handle_offers(receipt, self.product_offers_map, self.catalog)
 
         return receipt
