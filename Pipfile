@@ -9,6 +9,7 @@ python-dateutil = "*"
 [dev-packages]
 approvaltests = "*"
 pytest-approvaltests = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.10"
