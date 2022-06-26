@@ -11,5 +11,8 @@ class FakeCatalog(SupermarketCatalog):
         self.products[product.name] = product
         self.prices_cents[product.name] = price_cents
 
+    def contains_product(self, product: Product) -> bool:
+        return product.name in self.products
+
     def get_unit_price_cents(self, product: Product) -> int:
         return self.prices_cents[product.name]

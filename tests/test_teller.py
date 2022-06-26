@@ -127,7 +127,7 @@ def test_add_products_to_receipt(mocker):
     )
     teller.add_offer(offer=offer)
 
-    cart = ShoppingCart()
+    cart = ShoppingCart(catalog=catalog)
     cart.add_item_quantity(product=toothbrush, quantity=2)
     cart.add_item_quantity(product=apples, quantity=3.017)
 
@@ -183,7 +183,7 @@ def test_check_out_articles_from_cart(mocker):
     )
     teller.add_bundle(bundle=bundle)
 
-    cart = ShoppingCart()
+    cart = ShoppingCart(catalog=catalog)
     cart.add_item_quantity(product=apples, quantity=3.5)
     cart.add_item_quantity(product=toothbrush, quantity=2)
     cart.add_item_quantity(product=toothpaste, quantity=3)
