@@ -153,7 +153,7 @@ def test_fail_create_x_for_amount_discount_amount_too_high():
     apples = Product(name="apples", unit=ProductUnit.KILO)
     with pytest.raises(
         ValueError,
-        match='Discount "3 for 597" must be lower than 3 times the unit price of 199 = 597 by itself!',
+        match='Discount "3 for 597" must be lower than 3 times the unit price of 199 \(= 597\) by itself!',
     ):
         _create_x_for_amount_discount(
             product=apples,

@@ -83,7 +83,7 @@ def _create_x_for_amount_discount(
 
     if paid_amount_per_x >= unit_price_cents * x:
         raise ValueError(
-            f'Discount "{x} for {paid_amount_per_x}" must be lower than {x} times the unit price of {unit_price_cents} = {unit_price_cents * x} by itself!'
+            f'Discount "{x} for {paid_amount_per_x}" must be lower than {x} times the unit price of {unit_price_cents} (= {unit_price_cents * x}) by itself!'
         )
     total = (
         paid_amount_per_x * (quantity_as_int // x)
