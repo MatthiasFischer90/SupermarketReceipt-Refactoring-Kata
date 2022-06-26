@@ -2,7 +2,7 @@ import pytest
 
 from model_objects import Bundle, Offer, Product, SpecialOfferType, ProductUnit
 from shopping_cart import ShoppingCart
-from teller import AlreadyHasBundleError, AlreadyHasOfferError, Teller
+from teller import Teller
 from tests.fake_catalog import FakeCatalog
 
 
@@ -307,107 +307,3 @@ def test_fail_discount_percentage_over_100():
         ValueError, match="Discount percentage must be between 0 and 100, but got 120!"
     ):
         teller.check_out_articles_from_cart(cart=cart)
-
-
-def test_fail_adding_offer_if_existing_offer():
-    catalog = FakeCatalog()
-    toothbrush = Product(name="toothbrush", unit=ProductUnit.EACH)
-    catalog.add_product(product=toothbrush, price_cents=100)
-
-    teller = Teller(catalog=catalog)
-    offer_one = Offer(
-        offer_type=SpecialOfferType.PERCENT_DISCOUNT,
-        product=toothbrush,
-        optional_argument=20,
-    )
-    teller.add_offer(offer=offer_one)
-    offer_two = Offer(
-        offer_type=SpecialOfferType.FIVE_FOR_AMOUNT,
-        product=toothbrush,
-        optional_argument=400,
-    )
-    with pytest.raises(
-        AlreadyHasOfferError,
-        match="Can't add Offer for Product toothbrush: Product already has an Offer!",
-    ):
-        teller.add_offer(offer=offer_two)
-
-
-def test_fail_adding_offer_if_existing_bundle():
-    catalog = FakeCatalog()
-    toothbrush = Product(name="toothbrush", unit=ProductUnit.EACH)
-    catalog.add_product(product=toothbrush, price_cents=100)
-
-    toothpaste = Product(name="toothpaste", unit=ProductUnit.EACH)
-    catalog.add_product(product=toothpaste, price_cents=80)
-
-    teller = Teller(catalog=catalog)
-    bundle = Bundle(
-        products=[toothbrush, toothpaste],
-        discount_percentage=20,
-    )
-    teller.add_bundle(bundle=bundle)
-    offer = Offer(
-        offer_type=SpecialOfferType.FIVE_FOR_AMOUNT,
-        product=toothbrush,
-        optional_argument=400,
-    )
-    with pytest.raises(
-        AlreadyHasBundleError,
-        match="Can't add Offer for Product toothbrush: Product already has a Bundle!",
-    ):
-        teller.add_offer(offer=offer)
-
-
-def test_fail_adding_bundle_if_existing_offer():
-    catalog = FakeCatalog()
-    toothbrush = Product(name="toothbrush", unit=ProductUnit.EACH)
-    catalog.add_product(product=toothbrush, price_cents=100)
-
-    toothpaste = Product(name="toothpaste", unit=ProductUnit.EACH)
-    catalog.add_product(product=toothpaste, price_cents=80)
-
-    teller = Teller(catalog=catalog)
-    offer = Offer(
-        offer_type=SpecialOfferType.PERCENT_DISCOUNT,
-        product=toothbrush,
-        optional_argument=20,
-    )
-    teller.add_offer(offer=offer)
-    bundle = Bundle(
-        products=[toothbrush, toothpaste],
-        discount_percentage=10,
-    )
-    with pytest.raises(
-        AlreadyHasOfferError,
-        match="Can't add Bundle for Product toothbrush: Product already has an Offer!",
-    ):
-        teller.add_bundle(bundle=bundle)
-
-
-def test_fail_adding_bundle_if_existing_bundle():
-    catalog = FakeCatalog()
-    toothbrush = Product(name="toothbrush", unit=ProductUnit.EACH)
-    catalog.add_product(product=toothbrush, price_cents=100)
-
-    toothpaste = Product(name="toothpaste", unit=ProductUnit.EACH)
-    catalog.add_product(product=toothpaste, price_cents=80)
-
-    dental_floss = Product(name="dental floss", unit=ProductUnit.EACH)
-    catalog.add_product(product=dental_floss, price_cents=60)
-
-    teller = Teller(catalog=catalog)
-    bundle_one = Bundle(
-        products=[toothbrush, toothpaste],
-        discount_percentage=20,
-    )
-    teller.add_bundle(bundle=bundle_one)
-    bundle_two = Bundle(
-        products=[toothbrush, dental_floss],
-        discount_percentage=10,
-    )
-    with pytest.raises(
-        AlreadyHasBundleError,
-        match="Can't add Bundle for Product toothbrush: Product already has a Bundle!",
-    ):
-        teller.add_bundle(bundle=bundle_two)

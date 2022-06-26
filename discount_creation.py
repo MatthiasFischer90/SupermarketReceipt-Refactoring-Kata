@@ -1,5 +1,5 @@
 from collections import namedtuple
-from typing import Optional
+from typing import Optional, Union
 from catalog import SupermarketCatalog
 from model_objects import (
     Bundle,
@@ -46,7 +46,7 @@ def _create_percentage_discount(
 
 def _create_x_for_y_discount(
     product: Product,
-    quantity: float,
+    quantity: Union[int, float],
     unit_price_cents: int,
     x: int,
     y: int,
@@ -72,7 +72,7 @@ def _create_x_for_y_discount(
 
 def _create_x_for_amount_discount(
     product: Product,
-    quantity: float,
+    quantity: Union[int, float],
     unit_price_cents: int,
     x: int,
     paid_amount_per_x: int,
@@ -184,14 +184,13 @@ def _create_discounts_from_bundle(
     for bundle_discount_item in bundle_discount_items:
         quantity = bundle_discount_item.quantity
         unit_price_cents = bundle_discount_item.unit_price_cents
-        quantity_as_int = int(quantity)
         discount_amount = quantity * unit_price_cents - (
             round(
                 lowest_purchase_quantity
                 * ((100 - bundle.discount_percentage) / 100)
                 * unit_price_cents
             )
-            + (quantity_as_int - lowest_purchase_quantity) * unit_price_cents
+            + (quantity - lowest_purchase_quantity) * unit_price_cents
         )
         discounts.append(
             Discount(

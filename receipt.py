@@ -1,3 +1,4 @@
+from typing import Union
 from model_objects import Discount, Product
 
 
@@ -5,7 +6,7 @@ class ReceiptItem:
     def __init__(
         self,
         product: Product,
-        quantity: float,
+        quantity: Union[int, float],
         price_cents: int,
         total_price_cents: int,
     ):
@@ -31,7 +32,7 @@ class Receipt:
     def add_product(
         self,
         product: Product,
-        quantity: float,
+        quantity: Union[int, float],
         price_cents: int,
         total_price_cents: int,
     ) -> None:
