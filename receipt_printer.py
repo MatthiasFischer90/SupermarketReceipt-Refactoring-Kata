@@ -31,7 +31,9 @@ class ReceiptPrinter:
 
     def _format_line_with_whitespace(self, name: str, value: str) -> str:
         line = name
-        whitespace_size = self.columns - len(name) - len(value)
+        # leave at least one whitespace between name and value
+        line += " "
+        whitespace_size = self.columns - len(line) - len(value)
         for _ in range(whitespace_size):
             line += " "
         line += value
