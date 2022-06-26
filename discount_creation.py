@@ -61,7 +61,7 @@ def _create_x_for_y_discount(
         raise ValueError(
             f"Discounted quantity {x} must be higher than paid quantity {y}!"
         )
-    discount_amount = quantity * unit_price_cents - (
+    discount_amount = round(quantity * unit_price_cents) - (
         ((quantity_as_int // x) * y * unit_price_cents)
         + quantity_as_int % x * unit_price_cents
     )
@@ -91,7 +91,7 @@ def _create_x_for_amount_discount(
         paid_amount_per_x * (quantity_as_int // x)
         + quantity_as_int % x * unit_price_cents
     )
-    discount_amount = unit_price_cents * quantity - total
+    discount_amount = round(unit_price_cents * quantity) - total
     return Discount(
         product=product,
         description=f"{x} for {paid_amount_per_x}",
