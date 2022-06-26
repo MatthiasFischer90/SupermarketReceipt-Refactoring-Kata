@@ -1,4 +1,5 @@
 from approvaltests import verify
+import pytest
 
 from model_objects import Product, ProductUnit, Discount
 from receipt import Receipt
@@ -80,3 +81,8 @@ def test_whole_receipt():
         [Discount(product=apples, description="3 for 2", discount_amount_cents=-99)]
     )
     verify(ReceiptPrinter().print_receipt(receipt=receipt))
+
+
+def test_fail_invalid_columns_value():
+    with pytest.raises(ValueError):
+        ReceiptPrinter(columns=-10)

@@ -5,6 +5,8 @@ from receipt import Receipt, ReceiptItem
 
 class ReceiptPrinter:
     def __init__(self, columns: int = 40):
+        if columns < 1:
+            raise ValueError(f"columns must be positiver integer, but got {columns}!")
         self.columns = columns
 
     def print_receipt(self, receipt: Receipt) -> str:
