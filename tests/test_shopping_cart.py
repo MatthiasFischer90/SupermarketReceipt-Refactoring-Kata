@@ -1,3 +1,5 @@
+"""This module contains the tests for the shopping_cart module."""
+
 import pytest
 
 from model_objects import Product, ProductUnit

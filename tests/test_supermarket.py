@@ -1,4 +1,10 @@
-import pytest
+"""This module contains more comprehensive tests for different scenarios.
+
+In the tests in this module, more complete test scenarios are covered that
+in the test modules that contain unit tests. If this project was actually
+connected to a database, this module's tests would most closely resemble
+e2e tests that work with external resources.
+"""
 
 from model_objects import Bundle, Offer, Product, SpecialOfferType, ProductUnit
 from shopping_cart import ShoppingCart

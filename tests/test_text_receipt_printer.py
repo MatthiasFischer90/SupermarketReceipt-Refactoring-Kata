@@ -1,3 +1,9 @@
+"""This module contains tests for the TextReceiptPrinter class and creates output files.
+
+The tests in this module create files that are compared to the expected output files
+in the approved_files subdirectory.
+"""
+
 from approvaltests import verify
 import pytest
 

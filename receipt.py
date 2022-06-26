@@ -3,6 +3,8 @@ from model_objects import Discount, Product
 
 
 class ReceiptItem:
+    """Class that represents the purchase of a single Product of a bigger Receipt."""
+
     def __init__(
         self,
         product: Product,
@@ -17,6 +19,8 @@ class ReceiptItem:
 
 
 class Receipt:
+    """Class that represents a Receipt for Products that have been purchased."""
+
     def __init__(self):
         self._items: list[ReceiptItem] = []
         self._discounts: list[Discount] = []

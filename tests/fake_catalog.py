@@ -3,6 +3,8 @@ from model_objects import Product
 
 
 class FakeCatalog(SupermarketCatalog):
+    """Catalog class that can be used for testing."""
+
     def __init__(self):
         self.products: dict[str, Product] = {}
         self.prices_cents: dict[str, int] = {}

@@ -1,3 +1,5 @@
+"""Module that contains all logic for creating Discounts."""
+
 from collections import namedtuple
 from typing import Optional, Union
 from catalog import SupermarketCatalog
@@ -255,6 +257,25 @@ def create_discounts(
     bundles: list[Bundle],
     catalog: SupermarketCatalog,
 ) -> list[Discount]:
+    """Creates Discounts on Products from given Offers and Bundles and returns them.
+
+    For every given Product, all given Offers and Bundles are checked to identify all
+    Discounts that should be given. This depends not just on the Products themselves,
+    but also on the quantities in which each Product is bought.
+
+    Args:
+        product_quantities_map (dict[Product, float]): A dict that contains the
+        quantities in which every Product is to be bought.
+        product_offers_map (dict[Product, Offer]): A dict that contains the Offers
+        for each Product that is to be bought.
+        bundles (list[Bundle]): All Bundles that are to be used for Discount creation.
+        catalog (SupermarketCatalog): The SupermarketCatalog to use to retrieve item
+        prices for every Product.
+
+    Returns:
+        list[Discount]: All Discounts that have been created for all Products.
+    """
+
     discounts = _create_discounts_from_offers(
         product_quantities_map=product_quantities_map,
         product_offers_map=product_offers_map,

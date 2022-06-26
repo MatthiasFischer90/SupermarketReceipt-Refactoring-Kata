@@ -1,3 +1,5 @@
+"""This module contains the tests for the discount_creation module."""
+
 import pytest
 
 from discount_creation import (

@@ -1,3 +1,5 @@
+"""Module that contains the classes responsible for creating string representations of Receipts."""
+
 from abc import ABC, abstractmethod
 
 from model_objects import Discount, ProductUnit
@@ -7,10 +9,24 @@ from receipt import Receipt, ReceiptItem
 class ReceiptPrinter(ABC):
     @abstractmethod
     def print_receipt(self, receipt: Receipt) -> str:
+        """Creates a text representation of a given Receipt.
+
+        Args:
+            receipt (Receipt): The Receipt for which to create the text representation.
+
+        Returns:
+            str: The text representation of the given Receipt.
+        """
         pass
 
 
 class TextReceiptPrinter(ReceiptPrinter):
+    """Class used to create text file representation of given Receipt.
+
+    The resulting text representation is formatted similar to how the
+    text would be formatted on a real-life receipt slip.
+    """
+
     def __init__(self, columns: int = 40):
         if columns < 1:
             raise ValueError(f"columns must be positive integer, but got {columns}!")
@@ -70,6 +86,8 @@ class TextReceiptPrinter(ReceiptPrinter):
 
 
 class HtmlReceiptPrinter(ReceiptPrinter):
+    """Class used to create HTML representation of given Receipt."""
+
     HTML_PREFIX = """<!DOCTYPE html>
 <html>
   <head>

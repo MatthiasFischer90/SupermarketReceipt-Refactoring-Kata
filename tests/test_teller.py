@@ -1,3 +1,5 @@
+"""This module contains the tests for the teller module."""
+
 from unittest.mock import ANY, call
 import pytest
 from receipt import Receipt

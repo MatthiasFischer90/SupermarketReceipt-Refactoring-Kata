@@ -12,6 +12,12 @@ class ProductNotInCatalogError(Exception):
 
 
 class ShoppingCart:
+    """Class that represents a collection of Products that are to be bought.
+
+    A ShoppingCart is associated with a SupermarketCatalog, and only allows for
+    adding Products that belong to that SupermarketCatalog.
+    """
+
     def __init__(self, catalog: SupermarketCatalog):
         self.catalog = catalog
         self._product_quantities: dict[Product, float] = {}

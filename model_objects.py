@@ -1,3 +1,5 @@
+"""Module that contains all the model classes for the project."""
+
 from enum import Enum
 from typing import Optional
 
