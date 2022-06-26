@@ -216,7 +216,7 @@ def test_fail_unexpected_special_offer_type():
 
     cart = ShoppingCart()
     cart.add_item_quantity(product=toothbrush, quantity=3)
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Unexpected value for offer.offer_type: -500"):
         teller.check_out_articles_from_cart(cart=cart)
 
 
@@ -235,7 +235,9 @@ def test_fail_negative_discount_percentage():
 
     cart = ShoppingCart()
     cart.add_item_quantity(product=apples, quantity=2)
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError, match="Discount percentage must be between 0 and 100, but got -10!"
+    ):
         teller.check_out_articles_from_cart(cart=cart)
 
 
@@ -254,5 +256,7 @@ def test_fail_discount_percentage_over_100():
 
     cart = ShoppingCart()
     cart.add_item_quantity(product=apples, quantity=2)
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError, match="Discount percentage must be between 0 and 100, but got 120!"
+    ):
         teller.check_out_articles_from_cart(cart=cart)

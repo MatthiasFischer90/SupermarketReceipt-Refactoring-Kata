@@ -84,5 +84,7 @@ def test_whole_receipt():
 
 
 def test_fail_invalid_columns_value():
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError, match="columns must be positive integer, but got -10!"
+    ):
         ReceiptPrinter(columns=-10)
