@@ -15,6 +15,10 @@ def _verify_optional_argument(
 def _create_percentage_discount(
     product: Product, quantity: float, unit_price_cents: int, percentage: float
 ) -> Discount:
+    if percentage < 0 or percentage > 100:
+        raise ValueError(
+            f"Discount percentage must be between 0 and 100, but got {percentage}!"
+        )
     discount_amount = round(quantity * unit_price_cents * percentage / 100)
     return Discount(
         product=product,
@@ -75,10 +79,10 @@ def _create_discount(
             x=3,
             y=2,
         )
-    elif offer.offer_type == SpecialOfferType.TEN_PERCENT_DISCOUNT:
+    elif offer.offer_type == SpecialOfferType.PERCENT_DISCOUNT:
         _verify_optional_argument(
             optional_argument=offer.optional_argument,
-            offer_type=SpecialOfferType.TEN_PERCENT_DISCOUNT,
+            offer_type=SpecialOfferType.PERCENT_DISCOUNT,
         )
         return _create_percentage_discount(
             product=product,

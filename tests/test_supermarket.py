@@ -63,7 +63,7 @@ def test_ten_percent_discount():
 
     teller = Teller(catalog=catalog)
     offer = Offer(
-        offer_type=SpecialOfferType.TEN_PERCENT_DISCOUNT,
+        offer_type=SpecialOfferType.PERCENT_DISCOUNT,
         product=toothbrush,
         optional_argument=10.0,
     )
@@ -187,6 +187,20 @@ def test_five_for_amount_offer():
     assert 1 == len(receipt_fourteen_toothbrushes.discounts)
 
 
+def test_price_can_be_zero_through_quantity():
+    catalog = FakeCatalog()
+    apples = Product(name="apples", unit=ProductUnit.KILO)
+    catalog.add_product(product=apples, price_cents=200)
+
+    teller = Teller(catalog=catalog)
+
+    # test with only 1 gram of apples
+    cart = ShoppingCart()
+    cart.add_item_quantity(product=apples, quantity=0.001)
+    receipt = teller.check_out_articles_from_cart(cart=cart)
+    assert 0 == receipt.get_total_price_cents()
+
+
 def test_fail_unexpected_special_offer_type():
     catalog = FakeCatalog()
     toothbrush = Product(name="toothbrush", unit=ProductUnit.EACH)
@@ -206,37 +220,39 @@ def test_fail_unexpected_special_offer_type():
         teller.check_out_articles_from_cart(cart=cart)
 
 
-def test_price_can_be_zero_through_quantity():
+def test_fail_negative_discount_percentage():
     catalog = FakeCatalog()
-
-    apples = Product(name="apples", unit=ProductUnit.KILO)
-    catalog.add_product(product=apples, price_cents=200)
-
-    teller = Teller(catalog=catalog)
-
-    # test with only 1 gram of apples
-    cart = ShoppingCart()
-    cart.add_item_quantity(product=apples, quantity=0.001)
-    receipt = teller.check_out_articles_from_cart(cart=cart)
-    assert 0 == receipt.get_total_price_cents()
-
-
-def test_price_can_be_zero_through_discount():
-    catalog = FakeCatalog()
-
     apples = Product(name="apples", unit=ProductUnit.KILO)
     catalog.add_product(product=apples, price_cents=200)
 
     teller = Teller(catalog=catalog)
     offer = Offer(
-        offer_type=SpecialOfferType.TEN_PERCENT_DISCOUNT,
+        offer_type=SpecialOfferType.PERCENT_DISCOUNT,
         product=apples,
-        optional_argument=100,
+        optional_argument=-10,
     )
     teller.add_offer(offer=offer)
 
-    # test with 20 kilograms of apples, but 100 percent discount
     cart = ShoppingCart()
-    cart.add_item_quantity(product=apples, quantity=20)
-    receipt = teller.check_out_articles_from_cart(cart=cart)
-    assert 0 == receipt.get_total_price_cents()
+    cart.add_item_quantity(product=apples, quantity=2)
+    with pytest.raises(ValueError):
+        teller.check_out_articles_from_cart(cart=cart)
+
+
+def test_fail_discount_percentage_over_100():
+    catalog = FakeCatalog()
+    apples = Product(name="apples", unit=ProductUnit.KILO)
+    catalog.add_product(product=apples, price_cents=200)
+
+    teller = Teller(catalog=catalog)
+    offer = Offer(
+        offer_type=SpecialOfferType.PERCENT_DISCOUNT,
+        product=apples,
+        optional_argument=120,
+    )
+    teller.add_offer(offer=offer)
+
+    cart = ShoppingCart()
+    cart.add_item_quantity(product=apples, quantity=2)
+    with pytest.raises(ValueError):
+        teller.check_out_articles_from_cart(cart=cart)
