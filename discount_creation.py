@@ -16,6 +16,10 @@ BundleDiscountItem = namedtuple(
 )
 
 
+class InvalidProductUnitError(Exception):
+    pass
+
+
 def _verify_optional_argument(
     optional_argument: Optional[float], offer_type: SpecialOfferType
 ) -> None:
@@ -48,16 +52,22 @@ def _create_x_for_y_discount(
     y: int,
 ) -> Optional[Discount]:
     quantity_as_int = int(quantity)
-    if quantity_as_int > y:
-        discount_amount = quantity * unit_price_cents - (
-            ((quantity_as_int // x) * y * unit_price_cents)
-            + quantity_as_int % x * unit_price_cents
+    if quantity_as_int <= y:
+        return None
+
+    if x <= y:
+        raise ValueError(
+            f"Discounted quantity {x} must be higher than paid quantity {y}!"
         )
-        return Discount(
-            product=product,
-            description=f"{x} for {y}",
-            discount_amount_cents=-discount_amount,
-        )
+    discount_amount = quantity * unit_price_cents - (
+        ((quantity_as_int // x) * y * unit_price_cents)
+        + quantity_as_int % x * unit_price_cents
+    )
+    return Discount(
+        product=product,
+        description=f"{x} for {y}",
+        discount_amount_cents=-discount_amount,
+    )
 
 
 def _create_x_for_amount_discount(
@@ -68,17 +78,23 @@ def _create_x_for_amount_discount(
     paid_amount_per_x: int,
 ) -> Optional[Discount]:
     quantity_as_int = int(quantity)
-    if quantity_as_int >= x:
-        total = (
-            paid_amount_per_x * (quantity_as_int // x)
-            + quantity_as_int % x * unit_price_cents
+    if quantity_as_int < x:
+        return None
+
+    if paid_amount_per_x >= unit_price_cents * x:
+        raise ValueError(
+            f'Discount "{x} for {paid_amount_per_x}" must be lower than {x} times the unit price of {unit_price_cents} = {unit_price_cents * x} by itself!'
         )
-        discount_amount = unit_price_cents * quantity - total
-        return Discount(
-            product=product,
-            description=f"{x} for {str(paid_amount_per_x)}",
-            discount_amount_cents=-discount_amount,
-        )
+    total = (
+        paid_amount_per_x * (quantity_as_int // x)
+        + quantity_as_int % x * unit_price_cents
+    )
+    discount_amount = unit_price_cents * quantity - total
+    return Discount(
+        product=product,
+        description=f"{x} for {paid_amount_per_x}",
+        discount_amount_cents=-discount_amount,
+    )
 
 
 def _create_discount_from_offer(
@@ -128,21 +144,49 @@ def _create_discount_from_offer(
             paid_amount_per_x=offer.optional_argument,
         )
     else:
-        raise ValueError(f"Unexpected value for offer.offer_type: {offer.offer_type}")
+        raise ValueError(f"Unexpected value for offer.offer_type: {offer.offer_type}!")
 
 
-def create_discounts_from_bundle(
+def _create_discounts_from_offers(
+    product_quantities_map: dict[Product, float],
+    product_offers_map: dict[Product, Offer],
+    catalog: SupermarketCatalog,
+) -> list[Discount]:
+    discounts: list[Discount] = []
+    for product, quantity in product_quantities_map.items():
+        if product not in product_offers_map.keys():
+            continue
+
+        offer = product_offers_map[product]
+        unit_price_cents = catalog.get_unit_price_cents(product)
+        discount = _create_discount_from_offer(
+            product=product,
+            quantity=quantity,
+            offer=offer,
+            unit_price_cents=unit_price_cents,
+        )
+        if discount:
+            discounts.append(discount)
+    return discounts
+
+
+def _create_discounts_from_bundle(
     bundle: Bundle,
     lowest_purchase_quantity: int,
     bundle_discount_items: list[BundleDiscountItem],
 ) -> list[Discount]:
     discounts: list[Discount] = []
+    if lowest_purchase_quantity <= 0:
+        raise ValueError(
+            f"lowest_purchase_quantity must be greater than 0, but it's {lowest_purchase_quantity}!"
+        )
+
     for bundle_discount_item in bundle_discount_items:
         quantity = bundle_discount_item.quantity
         unit_price_cents = bundle_discount_item.unit_price_cents
         quantity_as_int = int(quantity)
         discount_amount = quantity * unit_price_cents - (
-            (
+            round(
                 lowest_purchase_quantity
                 * ((100 - bundle.discount_percentage) / 100)
                 * unit_price_cents
@@ -159,38 +203,21 @@ def create_discounts_from_bundle(
     return discounts
 
 
-def create_discounts(
+def _create_discounts_from_bundles(
     product_quantities_map: dict[Product, float],
-    product_offers_map: dict[Product, Offer],
     bundles: list[Bundle],
     catalog: SupermarketCatalog,
 ) -> list[Discount]:
     discounts: list[Discount] = []
-
-    for product, quantity in product_quantities_map.items():
-        if product not in product_offers_map.keys():
-            continue
-
-        offer = product_offers_map[product]
-        unit_price_cents = catalog.get_unit_price_cents(product)
-        discount = _create_discount_from_offer(
-            product=product,
-            quantity=quantity,
-            offer=offer,
-            unit_price_cents=unit_price_cents,
-        )
-        if discount:
-            discounts.append(discount)
-
     for bundle in bundles:
         found_unpurchased_bundle_product = False
-        found_invalid_product_unit = False
         lowest_purchase_quantity: int = -1
         for product in bundle.products:
             # Bundles can only be applied if every Product has ProductUnit.EACH
             if product.unit != ProductUnit.EACH:
-                found_invalid_product_unit = True
-                break
+                raise InvalidProductUnitError(
+                    f"Bundles can only be applied if every Product has ProductUnit.EACH, but {product.name} has {product.unit}!"
+                )
 
             product_purchase_quantity = product_quantities_map.get(product)
             if product_purchase_quantity is None:
@@ -205,10 +232,10 @@ def create_discounts(
             ):
                 lowest_purchase_quantity = product_purchase_quantity
 
-        if found_invalid_product_unit or found_unpurchased_bundle_product:
+        if found_unpurchased_bundle_product:
             break
 
-        discounts += create_discounts_from_bundle(
+        discounts += _create_discounts_from_bundle(
             bundle=bundle,
             lowest_purchase_quantity=lowest_purchase_quantity,
             bundle_discount_items=[
@@ -220,5 +247,23 @@ def create_discounts(
                 for product in bundle.products
             ],
         )
+    return discounts
 
+
+def create_discounts(
+    product_quantities_map: dict[Product, float],
+    product_offers_map: dict[Product, Offer],
+    bundles: list[Bundle],
+    catalog: SupermarketCatalog,
+) -> list[Discount]:
+    discounts = _create_discounts_from_offers(
+        product_quantities_map=product_quantities_map,
+        product_offers_map=product_offers_map,
+        catalog=catalog,
+    )
+    discounts += _create_discounts_from_bundles(
+        product_quantities_map=product_quantities_map,
+        bundles=bundles,
+        catalog=catalog,
+    )
     return discounts

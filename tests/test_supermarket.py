@@ -261,7 +261,9 @@ def test_fail_unexpected_special_offer_type():
 
     cart = ShoppingCart()
     cart.add_item_quantity(product=toothbrush, quantity=3)
-    with pytest.raises(ValueError, match="Unexpected value for offer.offer_type: -500"):
+    with pytest.raises(
+        ValueError, match="Unexpected value for offer.offer_type: -500!"
+    ):
         teller.check_out_articles_from_cart(cart=cart)
 
 
