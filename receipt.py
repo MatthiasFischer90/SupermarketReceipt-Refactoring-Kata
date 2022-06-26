@@ -1,4 +1,5 @@
 from typing import Union
+
 from model_objects import Discount, Product
 
 

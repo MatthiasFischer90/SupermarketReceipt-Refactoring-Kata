@@ -4,10 +4,9 @@ The tests in this module create files that are compared to the expected output f
 in the approved_files subdirectory.
 """
 
-from approvaltests import verify
 import pytest
-
-from model_objects import Product, ProductUnit, Discount
+from approvaltests import verify
+from model_objects import Discount, Product, ProductUnit
 from receipt import Receipt
 from receipt_printer import TextReceiptPrinter
 

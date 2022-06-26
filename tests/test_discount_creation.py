@@ -1,20 +1,15 @@
 """This module contains the tests for the discount_creation module."""
 
 import pytest
-
-from discount_creation import (
-    BundleDiscountItem,
-    InvalidProductUnitError,
-    _verify_optional_argument,
-    _create_percentage_discount,
-    _create_x_for_y_discount,
-    _create_x_for_amount_discount,
-    _create_discount_from_offer,
-    _create_discounts_from_bundle,
-    _create_discounts_from_offers,
-    _create_discounts_from_bundles,
-    create_discounts,
-)
+from discount_creation import (BundleDiscountItem, InvalidProductUnitError,
+                               _create_discount_from_offer,
+                               _create_discounts_from_bundle,
+                               _create_discounts_from_bundles,
+                               _create_discounts_from_offers,
+                               _create_percentage_discount,
+                               _create_x_for_amount_discount,
+                               _create_x_for_y_discount,
+                               _verify_optional_argument, create_discounts)
 from model_objects import Bundle, Offer, Product, ProductUnit, SpecialOfferType
 from tests.fake_catalog import FakeCatalog
 

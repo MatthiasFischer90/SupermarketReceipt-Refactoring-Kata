@@ -6,7 +6,7 @@ connected to a database, this module's tests would most closely resemble
 e2e tests that work with external resources.
 """
 
-from model_objects import Bundle, Offer, Product, SpecialOfferType, ProductUnit
+from model_objects import Bundle, Offer, Product, ProductUnit, SpecialOfferType
 from shopping_cart import ShoppingCart
 from teller import Teller
 from tests.fake_catalog import FakeCatalog

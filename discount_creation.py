@@ -2,16 +2,10 @@
 
 from collections import namedtuple
 from typing import Optional, Union
-from catalog import SupermarketCatalog
-from model_objects import (
-    Bundle,
-    Discount,
-    Offer,
-    Product,
-    ProductUnit,
-    SpecialOfferType,
-)
 
+from catalog import SupermarketCatalog
+from model_objects import (Bundle, Discount, Offer, Product, ProductUnit,
+                           SpecialOfferType)
 
 BundleDiscountItem = namedtuple(
     "BundleDiscountItem", "product quantity unit_price_cents"

@@ -1,4 +1,5 @@
 from typing import Union
+
 from catalog import SupermarketCatalog
 from model_objects import Product, ProductUnit
 

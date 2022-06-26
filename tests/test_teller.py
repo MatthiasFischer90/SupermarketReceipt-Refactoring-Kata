@@ -1,12 +1,13 @@
 """This module contains the tests for the teller module."""
 
 from unittest.mock import ANY, call
+
 import pytest
+from model_objects import Bundle, Offer, Product, ProductUnit, SpecialOfferType
 from receipt import Receipt
 from shopping_cart import ShoppingCart
+from teller import AlreadyHasBundleError, AlreadyHasOfferError, Teller
 from tests.fake_catalog import FakeCatalog
-from model_objects import Bundle, Offer, Product, ProductUnit, SpecialOfferType
-from teller import Teller, AlreadyHasBundleError, AlreadyHasOfferError
 
 
 def test_fail_add_offer_with_existing_offer():

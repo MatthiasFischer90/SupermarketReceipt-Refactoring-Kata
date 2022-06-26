@@ -1,9 +1,8 @@
+from catalog import SupermarketCatalog
+from discount_creation import create_discounts
 from model_objects import Bundle, Offer, Product
 from receipt import Receipt
-from discount_creation import create_discounts
-
 from shopping_cart import ShoppingCart
-from catalog import SupermarketCatalog
 
 
 class AlreadyHasOfferError(Exception):

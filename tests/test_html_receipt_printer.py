@@ -5,8 +5,7 @@ in the approved_files subdirectory.
 """
 
 from approvaltests import verify
-
-from model_objects import Product, ProductUnit, Discount
+from model_objects import Discount, Product, ProductUnit
 from receipt import Receipt
 from receipt_printer import HtmlReceiptPrinter
 

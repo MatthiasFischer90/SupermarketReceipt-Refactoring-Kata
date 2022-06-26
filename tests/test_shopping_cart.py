@@ -1,13 +1,9 @@
 """This module contains the tests for the shopping_cart module."""
 
 import pytest
-
 from model_objects import Product, ProductUnit
-from shopping_cart import (
-    IllegalQuantityForProductTypeError,
-    ProductNotInCatalogError,
-    ShoppingCart,
-)
+from shopping_cart import (IllegalQuantityForProductTypeError,
+                           ProductNotInCatalogError, ShoppingCart)
 from tests.fake_catalog import FakeCatalog
 
 
