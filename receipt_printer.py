@@ -1,9 +1,16 @@
-from model_objects import Discount, ProductUnit
+from abc import ABC, abstractmethod
 
+from model_objects import Discount, ProductUnit
 from receipt import Receipt, ReceiptItem
 
 
-class ReceiptPrinter:
+class ReceiptPrinter(ABC):
+    @abstractmethod
+    def print_receipt(self, receipt: Receipt) -> str:
+        pass
+
+
+class TextReceiptPrinter(ReceiptPrinter):
     def __init__(self, columns: int = 40):
         if columns < 1:
             raise ValueError(f"columns must be positive integer, but got {columns}!")
@@ -21,7 +28,7 @@ class ReceiptPrinter:
 
         result += "\n"
         result += self._present_total(receipt=receipt)
-        return str(result)
+        return result
 
     def _print_receipt_item(self, item: ReceiptItem) -> str:
         total_price_printed = self._print_price(price_cents=item.total_price_cents)
@@ -60,3 +67,168 @@ class ReceiptPrinter:
         name = "Total: "
         value = self._print_price(price_cents=receipt.get_total_price_cents())
         return self._format_line_with_whitespace(name=name, value=value)
+
+
+class HtmlReceiptPrinter(ReceiptPrinter):
+    HTML_PREFIX = """<!DOCTYPE html>
+<html>
+  <head>
+    <title>Receipt</title>
+    <style>
+      table, td, th { border : 1px solid black; }
+      table { margin-bottom: 10px; margin-top: 10px;}
+      th { padding : 13px; }
+      td { padding : 15px; }
+    </style>
+  </head>
+  <body>
+    """
+
+    HTML_SUFFIX = """  </body>
+</html>"""
+
+    def print_receipt(self, receipt: Receipt) -> str:
+        body_indentation = 4
+        result = self.HTML_PREFIX
+        result += self._print_item_table(receipt=receipt, indentation=body_indentation)
+        result += self._print_discount_table(
+            receipt=receipt, indentation=body_indentation
+        )
+        result += self._print_total(receipt=receipt, indentation=body_indentation)
+        result += self.HTML_SUFFIX
+        return result
+
+    def _print_indentation(self, indentation: int) -> str:
+        return " " * indentation
+
+    def _get_price_string(self, price_cents: int) -> str:
+        return "%.2f" % (price_cents / 100)
+
+    def _get_quantity_string(self, item: ReceiptItem) -> str:
+        if ProductUnit.EACH == item.product.unit:
+            return str(item.quantity)
+        else:
+            return "%.3f" % item.quantity
+
+    def _print_item_table(self, receipt: Receipt, indentation: int) -> str:
+        if len(receipt.items) == 0:
+            return ""
+
+        content = "<table>\n"
+        content += self._print_item_table_headers(indentation=(indentation + 2))
+        for item in receipt.items:
+            content += self._print_item_table_row(
+                item=item, indentation=(indentation + 2)
+            )
+        content += self._print_indentation(indentation=indentation)
+        content += "</table>\n"
+        return content
+
+    def _print_item_table_headers(self, indentation: int) -> str:
+        result = self._print_indentation(indentation=indentation)
+        result += "<tr>\n"
+        result += self._print_indentation(indentation=(indentation + 2))
+        result += "<th>Product name</th>\n"
+        result += self._print_indentation(indentation=(indentation + 2))
+        result += "<th>Unit price (EUR)</th>\n"
+        result += self._print_indentation(indentation=(indentation + 2))
+        result += "<th>Quantity</th>\n"
+        result += self._print_indentation(indentation=(indentation + 2))
+        result += "<th>Total price (EUR)</th>\n"
+        result += self._print_indentation(indentation=indentation)
+        result += "</tr>\n"
+        return result
+
+    def _print_item_table_row(self, item: ReceiptItem, indentation: int) -> str:
+        row = self._print_indentation(indentation=indentation)
+        row += "<tr>\n"
+        row += self._print_product_name(item=item, indentation=(indentation + 2))
+        row += self._print_item_unit_price(item=item, indentation=(indentation + 2))
+        row += self._print_item_quantity(item=item, indentation=(indentation + 2))
+        row += self._print_item_total_price(item=item, indentation=(indentation + 2))
+        row += self._print_indentation(indentation=indentation)
+        row += "</tr>\n"
+        return row
+
+    def _print_product_name(self, item: ReceiptItem, indentation: int) -> str:
+        cell = self._print_indentation(indentation=indentation)
+        cell += f"<td>{item.product.name}</td>\n"
+        return cell
+
+    def _print_item_unit_price(self, item: ReceiptItem, indentation: int) -> str:
+        price_euros_string = self._get_price_string(price_cents=item.price_cents)
+        cell = self._print_indentation(indentation=indentation)
+        cell += f"<td>{price_euros_string}</td>\n"
+        return cell
+
+    def _print_item_quantity(self, item: ReceiptItem, indentation: int) -> str:
+        quantity_string = self._get_quantity_string(item=item)
+        cell = self._print_indentation(indentation=indentation)
+        cell += f"<td>{quantity_string}</td>\n"
+        return cell
+
+    def _print_item_total_price(self, item: ReceiptItem, indentation: int) -> str:
+        price_euros_string = self._get_price_string(price_cents=item.total_price_cents)
+        cell = self._print_indentation(indentation=indentation)
+        cell += f"<td>{price_euros_string}</td>\n"
+        return cell
+
+    def _print_discount_table(self, receipt: Receipt, indentation: int) -> str:
+        if len(receipt.discounts) == 0:
+            return ""
+
+        content = self._print_indentation(indentation=indentation)
+        content += "<table>\n"
+        content += self._print_discount_table_headers(indentation=(indentation + 2))
+        for discount in receipt.discounts:
+            content += self._print_discount_table_row(
+                discount=discount, indentation=(indentation + 2)
+            )
+        content += self._print_indentation(indentation=indentation)
+        content += "</table>\n"
+        return content
+
+    def _print_discount_table_headers(self, indentation: int) -> str:
+        row = self._print_indentation(indentation=indentation)
+        row += "<tr>\n"
+        row += self._print_indentation(indentation=(indentation + 2))
+        row += "<th>Discount description</th>\n"
+        row += self._print_indentation(indentation=(indentation + 2))
+        row += "<th>Discount value (EUR)</th>\n"
+        row += self._print_indentation(indentation=indentation)
+        row += "</tr>\n"
+        return row
+
+    def _print_discount_table_row(self, discount: Discount, indentation: int) -> str:
+        row = self._print_indentation(indentation=indentation)
+        row += "<tr>\n"
+        row += self._print_discount_description(
+            discount=discount, indentation=(indentation + 2)
+        )
+        row += self._print_discount_value(
+            discount=discount, indentation=(indentation + 2)
+        )
+        row += self._print_indentation(indentation=indentation)
+        row += "</tr>\n"
+        return row
+
+    def _print_discount_description(self, discount: Discount, indentation: int) -> str:
+        cell = self._print_indentation(indentation=indentation)
+        cell += f"<td>{discount.description}</td>\n"
+        return cell
+
+    def _print_discount_value(self, discount: Discount, indentation: int) -> str:
+        discount_value_euros_string = self._get_price_string(
+            price_cents=discount.discount_amount_cents
+        )
+        cell = self._print_indentation(indentation=indentation)
+        cell += f"<td>{discount_value_euros_string}</td>\n"
+        return cell
+
+    def _print_total(self, receipt: Receipt, indentation: int) -> str:
+        total_price_euros_string = self._get_price_string(
+            price_cents=receipt.get_total_price_cents()
+        )
+        line = self._print_indentation(indentation=indentation)
+        line += f"<p>Total: {total_price_euros_string}</p>\n"
+        return line

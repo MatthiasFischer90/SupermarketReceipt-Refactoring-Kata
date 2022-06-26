@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Receipt</title>
+    <style>
+      table, td, th { border : 1px solid black; }
+      table { margin-bottom: 10px; margin-top: 10px;}
+      th { padding : 13px; }
+      td { padding : 15px; }
+    </style>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <th>Product name</th>
+        <th>Unit price (EUR)</th>
+        <th>Quantity</th>
+        <th>Total price (EUR)</th>
+      </tr>
+      <tr>
+        <td>toothbrush</td>
+        <td>0.99</td>
+        <td>3</td>
+        <td>2.97</td>
+      </tr>
+      <tr>
+        <td>apples</td>
+        <td>1.99</td>
+        <td>0.750</td>
+        <td>1.49</td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <th>Discount description</th>
+        <th>Discount value (EUR)</th>
+      </tr>
+      <tr>
+        <td>3 for 2</td>
+        <td>-0.99</td>
+      </tr>
+    </table>
+    <p>Total: 3.47</p>
+  </body>
+</html>
