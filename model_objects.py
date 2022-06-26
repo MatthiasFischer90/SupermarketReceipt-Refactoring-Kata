@@ -12,6 +12,9 @@ class Product:
         self.name = name
         self.unit = unit
 
+    def __str__(self):
+        return f"Product(name={self.name})"
+
 
 class SpecialOfferType(Enum):
     THREE_FOR_TWO = 1

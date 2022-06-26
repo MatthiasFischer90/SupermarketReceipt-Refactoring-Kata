@@ -27,11 +27,11 @@ class Teller:
         product = offer.product
         if product in self.product_offers_map:
             raise AlreadyHasOfferError(
-                f"Can't add Offer for Product {product.name}: Product already has an Offer!"
+                f"Can't add Offer for {product}: Product already has an Offer!"
             )
         if product in self.product_bundles_map:
             raise AlreadyHasBundleError(
-                f"Can't add Offer for Product {product.name}: Product already has a Bundle!"
+                f"Can't add Offer for {product}: Product already has a Bundle!"
             )
         self.product_offers_map[offer.product] = offer
 
@@ -42,11 +42,11 @@ class Teller:
         for product in bundle.products:
             if product in self.product_offers_map:
                 raise AlreadyHasOfferError(
-                    f"Can't add Bundle for Product {product.name}: Product already has an Offer!"
+                    f"Can't add Bundle for {product}: Product already has an Offer!"
                 )
             if product in self.product_bundles_map:
                 raise AlreadyHasBundleError(
-                    f"Can't add Bundle for Product {product.name}: Product already has a Bundle!"
+                    f"Can't add Bundle for {product}: Product already has a Bundle!"
                 )
 
         for product in bundle.products:

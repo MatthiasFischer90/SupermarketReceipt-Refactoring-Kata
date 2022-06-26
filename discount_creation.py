@@ -215,7 +215,7 @@ def _create_discounts_from_bundles(
             # Bundles can only be applied if every Product has ProductUnit.EACH
             if product.unit != ProductUnit.EACH:
                 raise InvalidProductUnitError(
-                    f"Bundles can only be applied if every Product has ProductUnit.EACH, but {product.name} has {product.unit}!"
+                    f"Bundles can only be applied if every Product has ProductUnit.EACH, but {product} has {product.unit}!"
                 )
 
             product_purchase_quantity = product_quantities_map.get(product)

@@ -40,7 +40,7 @@ def test_fail_add_item_quantity_unexpected_float_quantity():
     cart = ShoppingCart(catalog=catalog)
     with pytest.raises(
         IllegalQuantityForProductTypeError,
-        match="Can't add 2.5 of toothbrush to cart - Products with ProductUnit.EACH must be added in integer quantities!",
+        match="Can't add 2.5 of Product\(name=toothbrush\) to cart - Products with ProductUnit.EACH must be added in integer quantities!",
     ):
         cart.add_item_quantity(product=toothbrush, quantity=2.5)
 
@@ -55,6 +55,6 @@ def test_fail_add_item_quantity_product_not_in_catalog():
     cart = ShoppingCart(catalog=catalog)
     with pytest.raises(
         ProductNotInCatalogError,
-        match="Can't add Product apples to ShoppingCart - Product is not in Catalog that this ShoppingCart belongs to!",
+        match="Can't add Product\(name=apples\) to ShoppingCart - Product is not in Catalog that this ShoppingCart belongs to!",
     ):
         cart.add_item_quantity(product=apples, quantity=3.5)

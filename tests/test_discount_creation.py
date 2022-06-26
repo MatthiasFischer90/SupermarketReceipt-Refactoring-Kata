@@ -437,7 +437,7 @@ def test_fail_create_discounts_from_bundles_invalid_type():
 
     with pytest.raises(
         InvalidProductUnitError,
-        match="Bundles can only be applied if every Product has ProductUnit.EACH, but apples has ProductUnit.KILO!",
+        match="Bundles can only be applied if every Product has ProductUnit.EACH, but Product\(name=apples\) has ProductUnit.KILO!",
     ):
         _create_discounts_from_bundles(
             product_quantities_map={apples: 2.5, toothbrush: 2},

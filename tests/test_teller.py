@@ -26,7 +26,7 @@ def test_fail_add_offer_with_existing_offer():
     )
     with pytest.raises(
         AlreadyHasOfferError,
-        match="Can't add Offer for Product toothbrush: Product already has an Offer!",
+        match="Can't add Offer for Product\(name=toothbrush\): Product already has an Offer!",
     ):
         teller.add_offer(offer=offer_two)
 
@@ -52,7 +52,7 @@ def test_fail_add_offer_with_existing_bundle():
     )
     with pytest.raises(
         AlreadyHasBundleError,
-        match="Can't add Offer for Product toothbrush: Product already has a Bundle!",
+        match="Can't add Offer for Product\(name=toothbrush\): Product already has a Bundle!",
     ):
         teller.add_offer(offer=offer)
 
@@ -78,7 +78,7 @@ def test_fail_add_bundle_with_existing_offer():
     )
     with pytest.raises(
         AlreadyHasOfferError,
-        match="Can't add Bundle for Product toothbrush: Product already has an Offer!",
+        match="Can't add Bundle for Product\(name=toothbrush\): Product already has an Offer!",
     ):
         teller.add_bundle(bundle=bundle)
 
@@ -106,7 +106,7 @@ def test_fail_add_bundle_with_existing_bundle():
     )
     with pytest.raises(
         AlreadyHasBundleError,
-        match="Can't add Bundle for Product toothbrush: Product already has a Bundle!",
+        match="Can't add Bundle for Product\(name=toothbrush\): Product already has a Bundle!",
     ):
         teller.add_bundle(bundle=bundle_two)
 
