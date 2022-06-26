@@ -36,4 +36,10 @@ class Discount:
     def __init__(self, product: Product, description: str, discount_amount_cents: int):
         self.product = product
         self.description = description
-        self.discount_amount_counts = discount_amount_cents
+        self.discount_amount_cents = discount_amount_cents
+
+
+class Bundle:
+    def __init__(self, products: list[Product], discount_percentage: float):
+        self.products = products
+        self.discount_percentage = discount_percentage

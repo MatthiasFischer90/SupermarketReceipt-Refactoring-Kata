@@ -25,7 +25,7 @@ class Receipt:
         for item in self.items:
             total += item.total_price_cents
         for discount in self.discounts:
-            total += discount.discount_amount_counts
+            total += discount.discount_amount_cents
         return total
 
     def add_product(

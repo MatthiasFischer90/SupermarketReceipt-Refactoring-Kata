@@ -53,7 +53,7 @@ class ReceiptPrinter:
 
     def _print_discount(self, discount: Discount) -> str:
         name = f"{discount.description} ({discount.product.name})"
-        value = self._print_price(price_cents=discount.discount_amount_counts)
+        value = self._print_price(price_cents=discount.discount_amount_cents)
         return self._format_line_with_whitespace(name=name, value=value)
 
     def _present_total(self, receipt: Receipt) -> str:
